@@ -6,7 +6,6 @@
 body,#root{
   height: 100%;
   width: 100%;
-  font-family: 'Roboto', sans-serif;
   background: #1e1212;
 }
 main{
@@ -39,6 +38,8 @@ main .right{
   background-color: #d1d0d0;
   padding: 1.5rem;
   border-radius: 0.7rem;
+  overflow: scroll;
+  font-size: large;
  
 }
 main .left .reviewBtn{

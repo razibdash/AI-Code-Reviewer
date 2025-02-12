@@ -4,14 +4,20 @@ import Editor from "react-simple-code-editor";
 import axios from "axios";
 import "./App.css";
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+
+import Loader from "./components/Loader";
 
 function App() {
-  const [code, setCode] = useState("function fetchData() {}");
+  const [loader, setLoader] = useState(false);
+  const [code, setCode] = useState("function fetchData() {return a+b}");
   const [response, setResponse] = useState("");
   useEffect(() => {
     prism.highlightAll();
   });
+
   const codeReview = async () => {
+    setLoader(true);
     try {
       const response = await axios.post(
         "http://localhost:3000/api/get-review",
@@ -19,9 +25,12 @@ function App() {
           code,
         }
       );
-      setResponse(response);
+      setResponse(response.data.response);
+      if (response) {
+        setLoader(false);
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   };
   return (
@@ -29,11 +38,6 @@ function App() {
       <main>
         <div className="left">
           <div className="code">
-            {/* <pre>
-              <code className="language-javascript">
-                {`function fetchData() {}`}
-              </code>
-            </pre> */}
             <Editor
               value={code}
               onValueChange={(code) => setCode(code)}
@@ -53,7 +57,9 @@ function App() {
           </div>
         </div>
         <div className="right">
-          <div className="review"></div>
+          <div className="review">
+            {loader ? <h1>Loading...</h1> : <Markdown>{response}</Markdown>}
+          </div>
         </div>
       </main>
     </>
